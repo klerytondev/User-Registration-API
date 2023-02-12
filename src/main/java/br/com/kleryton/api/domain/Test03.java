@@ -1,4 +1,4 @@
 package br.com.kleryton.api.domain;
 
-public class Teste02 {
+public class Test03 {
 }
