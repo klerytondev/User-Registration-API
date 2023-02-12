@@ -4,6 +4,6 @@ import br.com.kleryton.api.domain.User;
 
 public interface UserService {
 
-    User findByID(Integer id);
+    User findByID(Long id);
 
 }
