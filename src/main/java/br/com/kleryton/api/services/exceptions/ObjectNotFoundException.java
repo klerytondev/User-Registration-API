@@ -1,0 +1,11 @@
+package br.com.kleryton.api.services.exceptions;
+
+public class ObjectNotFoundException extends RuntimeException{
+    public ObjectNotFoundException(String message) {
+        super(message);
+    }
+
+    public ObjectNotFoundException(String mensagem, Throwable causa) {
+        super(mensagem, causa);
+    }
+}

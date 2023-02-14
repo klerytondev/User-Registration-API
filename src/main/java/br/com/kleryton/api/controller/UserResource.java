@@ -1,4 +1,4 @@
-package br.com.kleryton.api.resoucers;
+package br.com.kleryton.api.controller;
 
 import br.com.kleryton.api.domain.User;
 import br.com.kleryton.api.services.impl.UserServiceImpl;
