@@ -4,6 +4,7 @@ import br.com.kleryton.api.domain.User;
 import br.com.kleryton.api.domain.dtos.UserDTO;
 import br.com.kleryton.api.repositories.UserRepositorie;
 import br.com.kleryton.api.services.UserService;
+import br.com.kleryton.api.services.exceptions.IntegridadeDeDadosException;
 import br.com.kleryton.api.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserDTO userDTO) {
+        finsByEmail(userDTO);
         return userRepositorie.save(mapper.map(userDTO, User.class));
+    }
+    private void finsByEmail(UserDTO obj){
+        Optional<User> user = userRepositorie.findByEmail(obj.getEmail());
+        if(user.isPresent()){
+            throw new IntegridadeDeDadosException("Email já cadastrado!");
+        }
     }
 }
