@@ -1,5 +1,6 @@
 package br.com.kleryton.api.controller.exceptions;
 
+import br.com.kleryton.api.services.exceptions.IntegridadeDeDadosException;
 import br.com.kleryton.api.services.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,19 @@ public class ApplicationControllerAdvice {
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(IntegridadeDeDadosException.class)
+    public ResponseEntity<StandarError> dataIntegrity(IntegridadeDeDadosException e, HttpServletRequest request) {
+        StandarError err = new StandarError();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Integridade de dados!");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     /*
      * Handler para tratar Status 400, geradas pelas validações dos objetos da bean validation nos RequestsDtos
      */
