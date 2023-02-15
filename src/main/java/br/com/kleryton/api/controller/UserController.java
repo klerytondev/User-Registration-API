@@ -12,11 +12,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/user")
-public class UserResource {
+public class UserController {
 
     @Autowired
     private ModelMapper mapper;
@@ -42,5 +43,10 @@ public class UserResource {
         User user = userService.createUser(userDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> userUpdate(@PathVariable Long id, @RequestBody UserDTO obj){
+        obj.setId(id);
+        User userObj = userService.updateUser(obj);
     }
 }

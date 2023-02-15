@@ -37,6 +37,12 @@ public class UserServiceImpl implements UserService {
         finsByEmail(userDTO);
         return userRepositorie.save(mapper.map(userDTO, User.class));
     }
+
+    @Override
+    public User updateUser(UserDTO obj) {
+        return userRepositorie.save(mapper.map(obj, User.class));
+    }
+
     private void finsByEmail(UserDTO obj){
         Optional<User> user = userRepositorie.findByEmail(obj.getEmail());
         if(user.isPresent()){
