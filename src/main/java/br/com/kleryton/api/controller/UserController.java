@@ -12,7 +12,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,5 +47,6 @@ public class UserController {
     public ResponseEntity<UserDTO> userUpdate(@PathVariable Long id, @RequestBody UserDTO obj){
         obj.setId(id);
         User userObj = userService.updateUser(obj);
+        return ResponseEntity.ok().body(mapper.map(userObj, UserDTO.class));
     }
 }

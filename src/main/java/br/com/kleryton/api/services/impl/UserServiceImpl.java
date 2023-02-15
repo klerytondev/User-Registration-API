@@ -34,18 +34,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserDTO userDTO) {
-        finsByEmail(userDTO);
+        findByEmail(userDTO);
         return userRepositorie.save(mapper.map(userDTO, User.class));
     }
 
     @Override
     public User updateUser(UserDTO obj) {
+        findByEmail(obj);
         return userRepositorie.save(mapper.map(obj, User.class));
     }
 
-    private void finsByEmail(UserDTO obj){
+    private void findByEmail(UserDTO obj){
         Optional<User> user = userRepositorie.findByEmail(obj.getEmail());
-        if(user.isPresent()){
+        if(user.isPresent() && !user.get().getId().equals(obj.getId())){
             throw new IntegridadeDeDadosException("Email já cadastrado!");
         }
     }

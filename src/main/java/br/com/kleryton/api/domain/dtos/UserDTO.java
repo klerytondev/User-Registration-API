@@ -14,9 +14,8 @@ public class UserDTO {
 
     private Long id;
     private String name;
-    @Column(nullable = false)
+    @Column(unique = true)
     private String email;
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 }
