@@ -18,13 +18,14 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/user")
 public class UserController {
 
+    public static final String ID = "/{id}";
     @Autowired
     private ModelMapper mapper;
 
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ID)
     public ResponseEntity<UserDTO> findByID(@PathVariable Long id) {
         return ResponseEntity.ok().body(mapper.map(userService.findByID(id), UserDTO.class));
 
@@ -40,13 +41,19 @@ public class UserController {
     @PostMapping(value = "/add")
     public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         User user = userService.createUser(userDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(user.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri
+                ().path(ID).buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = ID)
     public ResponseEntity<UserDTO> userUpdate(@PathVariable Long id, @RequestBody UserDTO obj){
         obj.setId(id);
         User userObj = userService.updateUser(obj);
         return ResponseEntity.ok().body(mapper.map(userObj, UserDTO.class));
+    }
+    @DeleteMapping(value = ID)
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id){
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
