@@ -3,7 +3,6 @@ package br.com.kleryton.api.services.impl;
 import br.com.kleryton.api.domain.User;
 import br.com.kleryton.api.domain.dtos.UserDTO;
 import br.com.kleryton.api.repositories.UserRepositorie;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,6 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -46,10 +48,20 @@ class UserServiceImplTest {
         //  Quando userRepositorie.findById=Mockado(repositorie.findById) for chamado,
         //  então retorna optionalUser
         Mockito.when(repositorie.findById(Mockito.anyLong())).thenReturn(optionalUser);
+
         //   Retorno no metodo findByID da classe UserServiceImpl
         User response = service.findByID(ID);
+
+        //    Asegura que meu User não é nulo
+        assertNotNull(response);
+
         //   Assegura que os dois argumentos são iguais
-        Assertions.assertEquals(User.class, response.getClass());
+        assertEquals(User.class, response.getClass());
+
+        //   Assegura que os dois objetos são iguais
+        assertEquals(ID, response.getId());//   Assegura que os dois IDs são iguais
+        assertEquals(NAME, response.getName());//   Assegura que os dois IDs são iguais
+        assertEquals(EMAIL, response.getEmail());
     }
 
     @Test
