@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -27,6 +28,7 @@ class UserServiceImplTest {
     public static final Long ID = 1L;
     public static final String EMAIL = "klertyton@gmail.com";
     public static final String PASSWORD = "258";
+    public static final int INDEX = 0;
 
     @InjectMocks
     private UserServiceImpl service;
@@ -48,22 +50,24 @@ class UserServiceImplTest {
 
     @Test
     void whenFindByIdThenReturnAnUserInstance() {
-        //  Quando userRepositorie.findById=Mockado(repositorie.findById) for chamado,
-        //  então retorna optionalUser
+//      Quando userRepositorie.findById=Mockado(repositorie.findById) for chamado,
+//      então retorna optionalUser
         when(repositorie.findById(Mockito.anyLong())).thenReturn(optionalUser);
 
-        //   Retorno no metodo findByID da classe UserServiceImpl
+//       Retorno no metodo findByID da classe UserServiceImpl
         User response = service.findByID(ID);
 
-        //    Asegura que meu User não é nulo
+//       Asegura que meu User não é nulo
         assertNotNull(response);
 
-        //   Assegura que os dois argumentos são iguais
+//       Assegura que os dois argumentos são iguais
         assertEquals(User.class, response.getClass());
 
-        //   Assegura que os dois objetos são iguais
-        assertEquals(ID, response.getId());//   Assegura que os dois IDs são iguais
-        assertEquals(NAME, response.getName());//   Assegura que os dois IDs são iguais
+//       Assegura que os dois objetos são iguais
+        assertEquals(ID, response.getId());
+//       Assegura que os dois IDs são iguais
+        assertEquals(NAME, response.getName());
+//      Assegura que os dois IDs são iguais
         assertEquals(EMAIL, response.getEmail());
     }
 
@@ -76,15 +80,33 @@ class UserServiceImplTest {
             // Quando chamar o service.findByID(ID) mockado deve lançar a exceção
             service.findByID(ID);
         } catch (Exception ex) {
-            // Assegura as exceções são iguais
+//          Assegura as exceções são iguais
             assertEquals(ObjectNotFoundException.class, ex.getClass());
-            // Assegura as mensagen das exceções são iguais
+//          Assegura as mensagen das exceções são iguais
             assertEquals("Objeto não encontrado!", ex.getMessage());
         }
     }
 
     @Test
-    void findAll() {
+    void whenFindAllThenReturnAnListOfUsers() {
+        when(repositorie.findAll()).thenReturn(List.of(user));
+
+        List<User> response = service.findAll();
+//      Verifica o User retornado do service.findAll() não é nulo
+        assertNotNull(response);
+//        Asseguura que o retorno do objeto mockado é apenas 1
+        assertEquals(1, response.size());
+//        Asseguura que o retorno do objeto mockado é igual ao objeto retornado do service
+        assertEquals(User.class, response.get(INDEX).getClass());
+//        Asseguura que o retorno do ID do objeto mockado é igual ao ID doobjeto retornado do service
+        assertEquals(ID, response.get(INDEX).getId());
+//        Asseguura que o retorno do NAME do objeto mockado é igual ao NAME doobjeto retornado do service
+        assertEquals(NAME, response.get(INDEX).getName());
+//        Asseguura que o retorno do EMAIL do objeto mockado é igual ao EMAIL doobjeto retornado do service
+        assertEquals(EMAIL, response.get(INDEX).getEmail());
+//        Asseguura que o retorno do ID do objeto mockado é igual ao ID doobjeto retornado do service
+        assertEquals(PASSWORD, response.get(INDEX).getPassword());
+
     }
 
     @Test
