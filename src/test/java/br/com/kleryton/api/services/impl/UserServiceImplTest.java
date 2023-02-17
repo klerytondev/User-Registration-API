@@ -52,7 +52,7 @@ class UserServiceImplTest {
     void whenFindByIdThenReturnAnUserInstance() {
 //      Quando userRepositorie.findById=Mockado(repositorie.findById) for chamado,
 //      então retorna optionalUser
-        when(repositorie.findById(Mockito.anyLong())).thenReturn(optionalUser);
+        when(repositorie.findById(anyLong())).thenReturn(optionalUser);
 
 //       Retorno no metodo findByID da classe UserServiceImpl
         User response = service.findByID(ID);
@@ -96,21 +96,32 @@ class UserServiceImplTest {
         assertNotNull(response);
 //        Asseguura que o retorno do objeto mockado é apenas 1
         assertEquals(1, response.size());
-//        Asseguura que o retorno do objeto mockado é igual ao objeto retornado do service
+//        Assegura que o retorno do objeto mockado é igual ao objeto retornado do service
         assertEquals(User.class, response.get(INDEX).getClass());
-//        Asseguura que o retorno do ID do objeto mockado é igual ao ID doobjeto retornado do service
+//        Assegura que o retorno do ID do objeto mockado é igual ao ID doobjeto retornado do service
         assertEquals(ID, response.get(INDEX).getId());
-//        Asseguura que o retorno do NAME do objeto mockado é igual ao NAME doobjeto retornado do service
+//        Assegura que o retorno do NAME do objeto mockado é igual ao NAME doobjeto retornado do service
         assertEquals(NAME, response.get(INDEX).getName());
-//        Asseguura que o retorno do EMAIL do objeto mockado é igual ao EMAIL doobjeto retornado do service
+//        Assegura que o retorno do EMAIL do objeto mockado é igual ao EMAIL doobjeto retornado do service
         assertEquals(EMAIL, response.get(INDEX).getEmail());
-//        Asseguura que o retorno do ID do objeto mockado é igual ao ID doobjeto retornado do service
+//        Assegura que o retorno do ID do objeto mockado é igual ao ID doobjeto retornado do service
         assertEquals(PASSWORD, response.get(INDEX).getPassword());
 
     }
 
     @Test
-    void createUser() {
+    void whenCreateUserThenAnUserInstance() {
+
+        when(repositorie.save(Mockito.any())).thenReturn(user);
+
+        User response = service.createUser(userDto);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
