@@ -3,6 +3,7 @@ package br.com.kleryton.api.services.impl;
 import br.com.kleryton.api.domain.User;
 import br.com.kleryton.api.domain.dtos.UserDTO;
 import br.com.kleryton.api.repositories.UserRepositorie;
+import br.com.kleryton.api.services.exceptions.IntegridadeDeDadosException;
 import br.com.kleryton.api.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ class UserServiceImplTest {
 
     public static final String NAME = "Kleryton";
     public static final Long ID = 1L;
-    public static final String EMAIL = "klertyton@gmail.com";
+    public static final String EMAIL = "kleryton@gmail.com";
     public static final String PASSWORD = "258";
     public static final int INDEX = 0;
 
@@ -125,7 +126,32 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateUser() {
+    void whenUpdateUserThenAnIntegridadeDeDadosException(){
+        when(repositorie.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+
+        try{
+            optionalUser.get().setId(3L);
+            service.createUser(userDto);
+        }
+        catch (Exception ex){
+            assertEquals(IntegridadeDeDadosException.class, ex.getClass());
+            assertEquals("Email já cadastrado!", ex.getMessage());
+        }
+    }
+
+
+    @Test
+    void whenUpdateUserThenAnUserUpdate() {
+        when(repositorie.save(Mockito.any())).thenReturn(user);
+
+        User response = service.updateUser(userDto);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(EMAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
