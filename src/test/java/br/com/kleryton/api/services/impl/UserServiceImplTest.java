@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -30,6 +30,7 @@ class UserServiceImplTest {
     public static final String EMAIL = "kleryton@gmail.com";
     public static final String PASSWORD = "258";
     public static final int INDEX = 0;
+    public static final String OBJETO_NÃO_ENCONTRADO = "Objeto não encontrado!";
 
     @InjectMocks
     private UserServiceImpl service;
@@ -75,7 +76,7 @@ class UserServiceImplTest {
     @Test
     void whenFindByIdThenReturnAnObjectNotFound() {
         //Quando buscar um ID não existente no repositorie deve retornar uma exception
-        when(repositorie.findById(anyLong())).thenThrow(new ObjectNotFoundException("Objeto não encontrado!"));
+        when(repositorie.findById(anyLong())).thenThrow(new ObjectNotFoundException(OBJETO_NÃO_ENCONTRADO));
 
         try {
             // Quando chamar o service.findByID(ID) mockado deve lançar a exceção
@@ -84,7 +85,7 @@ class UserServiceImplTest {
 //          Assegura as exceções são iguais
             assertEquals(ObjectNotFoundException.class, ex.getClass());
 //          Assegura as mensagen das exceções são iguais
-            assertEquals("Objeto não encontrado!", ex.getMessage());
+            assertEquals(OBJETO_NÃO_ENCONTRADO, ex.getMessage());
         }
     }
 
@@ -155,7 +156,18 @@ class UserServiceImplTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUserWithSucces() {
+        when(repositorie.findById(Mockito.anyLong())).thenReturn(optionalUser);
+//        Não faça nada quando o metodo findById for passado e passado qualquer valor Long
+        doNothing().when(repositorie).deleteById(Mockito.anyLong());
+
+        service.deleteUser(ID);
+
+//        Verifica quantas vezes o metodo FindyByID foi chmado. Para a teste abaixo apenas 1
+        verify(repositorie, times(1)).deleteById(Mockito.anyLong());
+
+
+
     }
 
     private void startUser() {
