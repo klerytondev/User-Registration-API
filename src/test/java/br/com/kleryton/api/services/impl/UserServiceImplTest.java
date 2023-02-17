@@ -127,14 +127,13 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenUpdateUserThenAnIntegridadeDeDadosException(){
+    void whenUpdateUserThenAnIntegridadeDeDadosException() {
         when(repositorie.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
 
-        try{
+        try {
             optionalUser.get().setId(3L);
             service.createUser(userDto);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             assertEquals(IntegridadeDeDadosException.class, ex.getClass());
             assertEquals("Email já cadastrado!", ex.getMessage());
         }
@@ -165,10 +164,21 @@ class UserServiceImplTest {
 
 //        Verifica quantas vezes o metodo FindyByID foi chmado. Para a teste abaixo apenas 1
         verify(repositorie, times(1)).deleteById(Mockito.anyLong());
-
-
-
     }
+
+    @Test
+    void deleteUserObjectNotFoundException() {
+        when(repositorie.findById(Mockito.anyLong())).thenThrow(new ObjectNotFoundException(OBJETO_NÃO_ENCONTRADO));
+
+        try{
+            service.deleteUser(ID);
+
+        }catch (RuntimeException ex){
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(OBJETO_NÃO_ENCONTRADO, ex.getMessage());
+        }
+    }
+
 
     private void startUser() {
         user = new User(ID, NAME, EMAIL, PASSWORD);
