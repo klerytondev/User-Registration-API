@@ -10,7 +10,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,15 +35,15 @@ class UserControllerTest {
     private User user;
     private UserDTO userDto;
 
-//    Cria uma instância real mockada
+    //    Cria uma instância real mockada
     @InjectMocks
     private UserController controller;
 
-//  @Cria uma instância mockada
+    //  @Cria uma instância mockada
     @Mock
     private ModelMapper mapper;
 
-//  @Cria uma instância mockada
+    //  @Cria uma instância mockada
     @Mock
     private UserServiceImpl userService;
 
@@ -69,11 +73,37 @@ class UserControllerTest {
     }
 
     @Test
-    void findAll() {
+    void whenFindAllThenReturnAListOfUSerDto() {
+        when(userService.findAll()).thenReturn(List.of(user));
+        when(mapper.map(any(), any())).thenReturn(userDto);
+
+        ResponseEntity<List<UserDTO>> response = controller.findAll();
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(ArrayList.class, response.getBody().getClass());
+        assertEquals(UserDTO.class, response.getBody().get(INDEX).getClass());
+
+        assertEquals(ID, response.getBody().get(INDEX).getId());
+        assertEquals(NAME, response.getBody().get(INDEX).getName());
+        assertEquals(EMAIL, response.getBody().get(INDEX).getEmail());
+        assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword());
+
     }
 
     @Test
-    void createUser() {
+    void whenCreateUserReturnCreated() {
+    when(userService.createUser(any())).thenReturn(user);
+
+    ResponseEntity<UserDTO> response = controller.createUser(userDto);
+
+    assertEquals(ResponseEntity.class, response.getClass());
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+//    Assegura que a o URI de acesso está no headers do Location
+    assertNotNull(response.getHeaders().get("Location"));
+
     }
 
     @Test
