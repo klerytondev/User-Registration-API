@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -34,15 +35,15 @@ class UserControllerTest {
     private User user;
     private UserDTO userDto;
 
-//    Cria uma instância real mockada
+    //    Cria uma instância real mockada
     @InjectMocks
     private UserController controller;
 
-//  @Cria uma instância mockada
+    //  @Cria uma instância mockada
     @Mock
     private ModelMapper mapper;
 
-//  @Cria uma instância mockada
+    //  @Cria uma instância mockada
     @Mock
     private UserServiceImpl userService;
 
@@ -92,7 +93,17 @@ class UserControllerTest {
     }
 
     @Test
-    void createUser() {
+    void whenCreateUserReturnCreated() {
+    when(userService.createUser(any())).thenReturn(user);
+
+    ResponseEntity<UserDTO> response = controller.createUser(userDto);
+
+    assertEquals(ResponseEntity.class, response.getClass());
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+//    Assegura que a o URI de acesso está no headers do Location
+    assertNotNull(response.getHeaders().get("Location"));
+
     }
 
     @Test
