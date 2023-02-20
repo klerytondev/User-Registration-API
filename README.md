@@ -5,8 +5,8 @@ API Restful genérica que realiza o cadastro de usuários em uma base dados.
 1. Gerenciamento de usuario (CRUD completo)
 2. Testes Unitários
 
-# Documentação
-*  A documentação da API foi gerada com Swagger e está disponível em```https://bank-account-deploy.herokuapp.com/swagger-ui.html```
+# Deploy
+*  A API está disponível em```https://user-registration-api.herokuapp.com/user```
 *  Na pasta utils está contida a collection do postman.
 
 # Pré-requisitos(manual de execução)
