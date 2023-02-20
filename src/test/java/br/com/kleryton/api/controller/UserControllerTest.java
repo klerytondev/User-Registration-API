@@ -20,7 +20,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserControllerTest {
@@ -107,11 +107,39 @@ class UserControllerTest {
     }
 
     @Test
-    void userUpdate() {
+    void whenUserUpdateThenReturnSuccess() {
+        when(userService.updateUser(userDto)).thenReturn(user);
+        when(mapper.map(any(), any())).thenReturn(userDto);
+
+        ResponseEntity<UserDTO> response = controller.userUpdate(ID, userDto);
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(UserDTO.class, response.getBody().getClass());
+
+        assertEquals(ID, response.getBody().getId());
+        assertEquals(NAME, response.getBody().getName());
+        assertEquals(EMAIL, response.getBody().getEmail());
+        assertEquals(PASSWORD, response.getBody().getPassword());
+
+
+
     }
 
     @Test
-    void deleteUser() {
+    void whenDeleteUserThenReturnSuccess() {
+        doNothing().when(userService).deleteUser(anyLong());
+
+        ResponseEntity<Object> response = controller.deleteUser(ID);
+
+        assertNotNull(response);
+
+        assertEquals(ResponseEntity.class, response.getClass());
+        verify(userService,times(1)).deleteUser(anyLong());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     private void startUser() {

@@ -4,7 +4,6 @@ import br.com.kleryton.api.services.exceptions.IntegridadeDeDadosException;
 import br.com.kleryton.api.services.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -44,18 +43,4 @@ public class ApplicationControllerAdvice {
         return ResponseEntity.status(status).body(err);
     }
 
-    /*
-     * Handler para tratar Status 400, geradas pelas validações dos objetos da bean validation nos RequestsDtos
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandarError> ArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
-        StandarError err = new StandarError();
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        err.setTimestamp(Instant.now());
-        err.setStatus(status.value());
-        err.setError("null field");
-        err.setMessage(e.getBindingResult().getFieldError().getDefaultMessage());
-        err.setPath(request.getRequestURI());
-        return ResponseEntity.status(status).body(err);
-    }
 }
