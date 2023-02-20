@@ -8,7 +8,4 @@ public class IntegridadeDeDadosException extends RuntimeException {
         super(mensagem);
     }
 
-    public IntegridadeDeDadosException(String mensagem, Throwable causa) {
-        super(mensagem, causa);
-    }
 }

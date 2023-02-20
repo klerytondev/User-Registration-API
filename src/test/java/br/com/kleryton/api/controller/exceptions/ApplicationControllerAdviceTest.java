@@ -1,5 +1,6 @@
 package br.com.kleryton.api.controller.exceptions;
 
+import br.com.kleryton.api.services.exceptions.IntegridadeDeDadosException;
 import br.com.kleryton.api.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApplicationControllerAdviceTest {
 
     public static final String MESSAGE = "Não foi possível encontrar o recurso solicitado!";
+    public static final String INTEGRIDADE_DE_DADOS = "Integridade de dados!";
     @InjectMocks
     private ApplicationControllerAdvice resApplicationControllerAdvice;
 
@@ -40,7 +42,19 @@ class ApplicationControllerAdviceTest {
     }
 
     @Test
-    void dataIntegrity() {
+    void whenDataIntegrityThenReturnAResponseEntity() {
+
+        ResponseEntity<StandarError> response = resApplicationControllerAdvice
+                .dataIntegrity(new IntegridadeDeDadosException(INTEGRIDADE_DE_DADOS),
+                        new MockHttpServletRequest());
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(StandarError.class, response.getBody().getClass());
+        assertEquals(INTEGRIDADE_DE_DADOS, response.getBody().getError());
+        assertEquals(400, response.getBody().getStatus());
+
     }
 
     @Test
